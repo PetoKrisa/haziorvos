@@ -21,7 +21,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'KutyaFasz123'
 app.config['UPLOAD_FOLDER'] = './static/uploads'
 app.permanent_session_lifetime = timedelta(days=30)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///haziorvos.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{filePath}/haziorvos.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
