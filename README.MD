@@ -16,4 +16,4 @@ python.exe ../Project/server.py
 The server is now running on your IP and Port
 (Default: x.x.x.x:80 or 127.0.0.1:80)
 
-You can access the admin panel with [https://127.0.0.1/admin/]{https://127.0.0.1/admin/}
+You can access the admin panel with https://127.0.0.1/admin/
