@@ -88,7 +88,7 @@ class Felir(db.Model):
     datum =  db.Column(db.DateTime)
 
     def __repr__(self):
-        return f'{self.id}; {self.TAJ}; {self.gyogyszer_neve}'
+        return f'{self.id}; {self.TAJ}; {self.gyogyszer_neve}; {self.datum}'
 
 class Diagnosztizal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -98,7 +98,7 @@ class Diagnosztizal(db.Model):
     datum =  db.Column(db.DateTime)
 
     def __repr__(self):
-        return f'{self.id}; {self.TAJ}; {self.betegseg_neve}'
+        return f'{self.id}; {self.TAJ}; {self.betegseg_neve}; {self.datum}'
 
 with app.app_context():
     db.create_all()
