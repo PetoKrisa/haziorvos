@@ -1,7 +1,7 @@
 ## Haziorvos
   
 **1)**
-Set "home" in pyvenv.cfg to **current directory**\Scripts  
+Set "home" in pyvenv.cfg to "**current directory\Scripts**" 
 **2)**
 Open cmd in the base dir and type:
 ```
