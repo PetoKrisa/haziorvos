@@ -10,8 +10,6 @@
 <body>
     {%include 'navbar.html'%}
 
-
-    
     <div class="betegCard">
         <div class="flexrow">
             <img src="../static/pfp.jpg" alt="pfp">
@@ -32,14 +30,48 @@
         </div>
     </div>
 
+
+
+
+    <dialog id="vizsgalat">
+        <form id="vizsgalatForm" action="/dev/vizsgalat_feltolt" method="post" enctype="multipart/form-data">
+            <label for="taj">Taj szám:</label>
+            <input type="text" id="taj_" name="taj" readonly value="{{beteg.TAJ}}" placeholder="TAJ">
+            <br>
+            <label for="datum">Időpont</label>
+            <input type="datetime-local" name="datum" id="datum" placeholder="Dátum">
+        </form>
+        <button class="red-btn" onclick="closeDialog(this)">Bezár</button> <button class="green-btn" onclick="submitForm_('vizsgalatForm')">Ment</button>
+    </dialog>
+
+    <script>
+        function openDialog(_id){
+            document.getElementById(_id).showModal()
+        }
+
+        function closeDialog(_child){
+            _child.parentElement.close()
+        }
+
+        function submitForm_(_id){
+            document.getElementById(_id).submit()
+        }
+
+    </script>
+
     <div class="betegContainer">
         <h1 >Vizsgálatok</h1>
-        <p class="text-button">Hozzáad</p>
+        <p class="text-button" onclick="openDialog('vizsgalat')">Hozzáad</p>
 
-        {%for vizsgalat in vizsgalatokq%}
+        {%for vizsgalat in beteg.vizsgalatok%}
+        {%if dtNow < vizsgalat.datum.timestamp()%}
         <details>
             <summary>Vkod: {{vizsgalat.vkod}}; Időpont: {{vizsgalat.datum}}</summary>
-
+        {%else%}
+        <details style="background-color: gray;">
+            <summary style="text-decoration: line-through rgba(255,255,255,0.6);">Vkod: {{vizsgalat.vkod}}; Időpont: {{vizsgalat.datum}}</summary>
+        {%endif%}
+        
             <p>Diagnosztizációk</p>
             {%set diagnosztizaciok = Diagnosztizal.query.filter(Diagnosztizal.vkod == vizsgalat.vkod).all()%}
             <ul>

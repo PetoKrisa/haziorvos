@@ -107,7 +107,33 @@ ul{
     padding: 0px;
 }
 
+dialog{
+    border: none;
+    background-color: var(--c-foreground);
+    color: white;
+    text-align: center;
+}
 
+dialog::backdrop{
+    background: rgba(0, 0, 0, 0.5);
+}
+
+dialog label, dialog input, dialog button{
+    font-size: 18pt;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.red-btn{
+    background-color: rgb(232, 72, 72);
+    color: white;
+}
+
+.green-btn{
+    background-color: rgb(60, 173, 60);
+    color: white;
+}
 
 @media (max-width: 800px){
     .betegCard, details{

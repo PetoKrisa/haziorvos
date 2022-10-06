@@ -2,7 +2,7 @@ import os
 from io import BytesIO
 import flask
 import hashlib
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta, datetime
 from flask import Flask, flash, jsonify, redirect, url_for, render_template, send_from_directory, request, Response, session, send_file, abort
@@ -34,7 +34,7 @@ class Beteg(db.Model):
     lakcim = db.Column(db.String(255))
     szuletes = db.Column(db.Date)
     
-    vizsgalatok = db.relationship("Vizsgalat", backref="beteg")
+    vizsgalatok = db.relationship("Vizsgalat", backref="beteg", order_by="desc(Vizsgalat.datum)")
     erzekenysegek = db.relationship("Erzekeny", backref="beteg")
     felirasok = db.relationship("Felir", backref="beteg")
     diagnosztizalasok = db.relationship("Diagnosztizal", backref="beteg")
@@ -154,15 +154,24 @@ def betegSearch():
 
 @app.route('/beteg/<taj>')
 def beteg(taj):
+    dtNow = time.time() 
     beteg = Beteg.query.filter(Beteg.TAJ == taj).first()
-    vizsgalatokq = Vizsgalat.query.filter(Vizsgalat.TAJ == taj).all()
+    vizsgalatokq = Vizsgalat.query.filter(Vizsgalat.TAJ == taj).order_by(desc(Vizsgalat.datum)).all()
     erzekenysegek = Erzekeny.query.filter(Erzekeny.TAJ == taj).all()
-    return render_template('beteg.html', beteg=beteg, vizsgalatokq=vizsgalatokq, erzekenysegek=erzekenysegek, Diagnosztizal=Diagnosztizal, Felir=Felir)
+    
+    return render_template('beteg.html',dtNow=dtNow, beteg=beteg, vizsgalatokq=vizsgalatokq, erzekenysegek=erzekenysegek, Diagnosztizal=Diagnosztizal, Felir=Felir)
 
+@app.route('/dev/vizsgalat_feltolt', methods=['get', 'post'])
+def devVizsgalat_feltolt():
+    taj = request.form['taj']
+    datum = datetime.strptime(request.form['datum'].replace('T', ' '), '%Y-%m-%d %H:%M')
+    db.session.add(Vizsgalat(TAJ=taj, datum=datum))
+    db.session.commit()
+    return redirect(f'/beteg/{taj}')
 
 @app.context_processor
 def handle_context():
-    return dict(session=session, db=db)
+    return dict(session=session, db=db, datetime=datetime, reversed=reversed)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
