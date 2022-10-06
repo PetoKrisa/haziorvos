@@ -115,13 +115,13 @@ with app.app_context():
 #    column_filters = []
 #
 #admin.add_link(MenuLink(name='Site', url='/'))
+
 class BetegView(ModelView):
     column_list = ["TAJ", "nev", "lakcim", "szuletes"]
     form_columns = ["vizsgalatok", "erzekenysegek", "felirasok", "diagnosztizalasok", "TAJ", "nev", "lakcim", "szuletes"]
     column_display_pk = True
     page_size = 100
     can_set_page_size = True
-
 
 admin.add_view(BetegView(Beteg, db.session))
 admin.add_view(ModelView(Vizsgalat, db.session))
@@ -130,21 +130,39 @@ admin.add_view(ModelView(Betegseg, db.session))
 admin.add_view(ModelView(Erzekeny, db.session))
 admin.add_view(ModelView(Felir, db.session))
 admin.add_view(ModelView(Diagnosztizal, db.session))
+
 #ip functions
 @app.before_request
 def showIp():
     print(request.headers.get('X-FORWARDED-FOR'))
 
+@app.before_request
+def fixAdmin():
+    if request.path == "/admin":
+        return redirect(f"{request.url_root}admin/")
+
 @app.route('/')
 def index():
-    return render_template('index.html')
-    
+    betegek = Beteg.query.all()
+    return render_template('index.html', betegek=betegek)
+
+@app.route('/betegSearch')
+def betegSearch():
+    q = request.args['q']
+    betegek = Beteg.query.filter(or_(Beteg.nev.contains(q), Beteg.TAJ.contains(q))).all()
+    return render_template('index.html', betegek=betegek)
+
+@app.route('/beteg/<taj>')
+def beteg(taj):
+    beteg = Beteg.query.filter(Beteg.TAJ == taj).first()
+    vizsgalatokq = Vizsgalat.query.filter(Vizsgalat.TAJ == taj).all()
+    erzekenysegek = Erzekeny.query.filter(Erzekeny.TAJ == taj).all()
+    return render_template('beteg.html', beteg=beteg, vizsgalatokq=vizsgalatokq, erzekenysegek=erzekenysegek, Diagnosztizal=Diagnosztizal, Felir=Felir)
+
 
 @app.context_processor
 def handle_context():
-    return dict(session=session)
-
-
+    return dict(session=session, db=db)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)

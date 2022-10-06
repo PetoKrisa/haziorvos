@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>{{beteg.nev}}</title>
+</head>
+<body>
+    {%include 'navbar.html'%}
+
+
+    
+    <div class="betegCard">
+        <div class="flexrow">
+            <img src="../static/pfp.jpg" alt="pfp">
+            <div class="flexcol">
+                <h1>{{beteg.nev}}</h1>
+                <h2>{{beteg.TAJ}}</h2>
+                <p>{{beteg.lakcim}}</p>
+                <p>{{beteg.szuletes}}</p>
+
+                <br>
+                <p>Gyógyszer Érzékenység</p>
+                <ul>
+                    {%for erzekeny in erzekenysegek%}
+                    <li><p>{{erzekeny.gyogyszer_neve}}</p></li>
+                    {%endfor%}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="betegContainer">
+        <h1 >Vizsgálatok</h1>
+        <p class="text-button">Hozzáad</p>
+
+        {%for vizsgalat in vizsgalatokq%}
+        <details>
+            <summary>Vkod: {{vizsgalat.vkod}}; Időpont: {{vizsgalat.datum}}</summary>
+
+            <p>Diagnosztizációk</p>
+            {%set diagnosztizaciok = Diagnosztizal.query.filter(Diagnosztizal.vkod == vizsgalat.vkod).all()%}
+            <ul>
+                {%for diagnosztizal in diagnosztizaciok%}
+                <li>{{diagnosztizal.betegseg_neve}}</li>
+                {%endfor%}
+            </ul>
+            <p>Felirások</p>
+            {%set felirasok = Felir.query.filter(Felir.vkod == vizsgalat.vkod).all()%}
+            <ul>
+                {%for felir in felirasok%}
+                <li>{{felir.gyogyszer_neve}}</li>
+                {%endfor%}
+            </ul>
+        </details>
+        {%endfor%}
+    </div>
+
+</body>
+</html>
