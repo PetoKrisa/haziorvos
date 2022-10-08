@@ -135,6 +135,19 @@ dialog label, dialog input, dialog button{
     color: white;
 }
 
+.list-form input{
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px white solid;
+    color: white;
+    font-size: 12pt;
+    padding: 1px;
+}
+
+.list-form input:focus{
+    outline: none;
+}
+
 @media (max-width: 800px){
     .betegCard, details{
         width: 100vw;

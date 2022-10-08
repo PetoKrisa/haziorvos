@@ -22,8 +22,8 @@
                 <br>
                 <p>Gyógyszer Érzékenység</p>
                 <ul>
-                    {%for erzekeny in erzekenysegek%}
-                    <li><p>{{erzekeny.gyogyszer_neve}}</p></li>
+                    {%for erzekenyseg in beteg.erzekenysegek%}
+                    <li><p>{{erzekenyseg.gyogyszer_neve}}</p></li>
                     {%endfor%}
                 </ul>
             </div>
@@ -78,6 +78,9 @@
                 {%for diagnosztizal in diagnosztizaciok%}
                 <li>{{diagnosztizal.betegseg_neve}}</li>
                 {%endfor%}
+                <form class="list-form" action="javascript:void(0)" onsubmit="">
+                    <input type="text" list="betegsegLista" id="diagnosztizalForm" name="diagnosztizalForm"><input type="submit" value="Hozzáad"> 
+                </form>
             </ul>
             <p>Felirások</p>
             {%set felirasok = Felir.query.filter(Felir.vkod == vizsgalat.vkod).all()%}
@@ -85,10 +88,25 @@
                 {%for felir in felirasok%}
                 <li>{{felir.gyogyszer_neve}}</li>
                 {%endfor%}
+                <form class="list-form" action="javascript:void('a')">
+                    <input type="text" name="felirForm" list="gyogyszerLista" id="felirForm" name="felirForm"><input type="submit" value="Hozzáad"> 
+                </form>
             </ul>
         </details>
         {%endfor%}
     </div>
 
+    {{betegsegek}}
+
+    <datalist id="betegsegLista">
+        {%for betegseg in betegsegek%}
+        <option value="{{betegseg.id}}">{{betegseg.betegseg_neve}}</option>
+        {%endfor%}
+    </datalist>
+    <datalist id="gyogyszerLista">
+        {%for gyogyszer in gyogyszerek%}
+        <option value="{{gyogyszer.id}}">{{gyogyszer.gyogyszer_neve}}</option>
+        {%endfor%}
+    </datalist>
 </body>
 </html>

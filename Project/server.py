@@ -75,30 +75,30 @@ class Betegseg(db.Model):
 class Erzekeny(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     TAJ = db.Column(db.Integer, db.ForeignKey("beteg.TAJ"))
-    gyogyszer_neve = db.Column(db.Integer, db.ForeignKey("gyogyszer.gyogyszer_neve"))
+    gyogyszer_id = db.Column(db.Integer, db.ForeignKey("gyogyszer.id"))
 
     def __repr__(self):
-        return f'{self.id}; {self.TAJ}; {self.gyogyszer_neve}'
+        return f'{self.id}; {self.TAJ}; {self.gyogyszer_id}'
 
 class Felir(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     TAJ = db.Column(db.Integer, db.ForeignKey("beteg.TAJ"))
-    gyogyszer_neve = db.Column(db.Integer, db.ForeignKey("gyogyszer.gyogyszer_neve"))
+    gyogyszer_id = db.Column(db.Integer, db.ForeignKey("gyogyszer.id"))
     vkod = db.Column(db.Integer, db.ForeignKey("vizsgalat.vkod"))
     datum =  db.Column(db.DateTime)
 
     def __repr__(self):
-        return f'{self.id}; {self.TAJ}; {self.gyogyszer_neve}; {self.datum}'
+        return f'{self.id}; {self.TAJ}; {self.gyogyszer_id}; {self.datum}'
 
 class Diagnosztizal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     TAJ = db.Column(db.Integer, db.ForeignKey("beteg.TAJ"))
-    betegseg_neve = db.Column(db.Integer, db.ForeignKey("betegseg.betegseg_neve"))
+    betegseg_id = db.Column(db.Integer, db.ForeignKey("betegseg.id"))
     vkod = db.Column(db.Integer, db.ForeignKey("vizsgalat.vkod"))
     datum =  db.Column(db.DateTime)
 
     def __repr__(self):
-        return f'{self.id}; {self.TAJ}; {self.betegseg_neve}; {self.datum}'
+        return f'{self.id}; {self.TAJ}; {self.betegseg_id}; {self.datum}'
 
 with app.app_context():
     db.create_all()
@@ -157,9 +157,10 @@ def beteg(taj):
     dtNow = time.time() 
     beteg = Beteg.query.filter(Beteg.TAJ == taj).first()
     vizsgalatokq = Vizsgalat.query.filter(Vizsgalat.TAJ == taj).order_by(desc(Vizsgalat.datum)).all()
-    erzekenysegek = Erzekeny.query.filter(Erzekeny.TAJ == taj).all()
+    betegsegek = Betegseg.query.all()
+    gyogyszerek = Gyogyszer.query.all()
     
-    return render_template('beteg.html',dtNow=dtNow, beteg=beteg, vizsgalatokq=vizsgalatokq, erzekenysegek=erzekenysegek, Diagnosztizal=Diagnosztizal, Felir=Felir)
+    return render_template('beteg.html',dtNow=dtNow, beteg=beteg,gyogyszerek=gyogyszerek, betegsegek=betegsegek, vizsgalatokq=vizsgalatokq, Diagnosztizal=Diagnosztizal, Felir=Felir)
 
 @app.route('/dev/vizsgalat_feltolt', methods=['get', 'post'])
 def devVizsgalat_feltolt():
