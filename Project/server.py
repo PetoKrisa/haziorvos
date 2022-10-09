@@ -160,7 +160,35 @@ def beteg(taj):
     betegsegek = Betegseg.query.all()
     gyogyszerek = Gyogyszer.query.all()
     
-    return render_template('beteg.html',dtNow=dtNow, beteg=beteg,gyogyszerek=gyogyszerek, betegsegek=betegsegek, vizsgalatokq=vizsgalatokq, Diagnosztizal=Diagnosztizal, Felir=Felir)
+    return render_template('beteg.html',dtNow=dtNow, Betegseg=Betegseg, Gyogyszer=Gyogyszer, beteg=beteg,gyogyszerek=gyogyszerek, betegsegek=betegsegek, vizsgalatokq=vizsgalatokq, Diagnosztizal=Diagnosztizal, Felir=Felir)
+
+@app.route('/dev/submitDiagnosztizal', methods=['get', 'post'])
+def devSubmitDiagnosztizal():
+    taj = request.form['taj']
+    betegseg_id = request.form['betegseg_id']
+    vkod = request.form['vkod']
+    betegsegek = Betegseg.query.filter(Betegseg.id == betegseg_id).first()
+    print(betegsegek)
+    if betegsegek == None or betegsegek == {}:
+        return abort(404)
+    else:
+        db.session.add(Diagnosztizal(datum=datetime.now(), betegseg_id=betegseg_id, TAJ=taj, vkod=vkod))
+        db.session.commit()
+    return redirect(f'/beteg/{taj}')
+@app.route('/dev/submitFelir', methods=['get', 'post'])
+def devSubmitFelir():
+    taj = request.form['taj']
+    gyogyszer_id = request.form['gyogyszer_id']
+    vkod = request.form['vkod']
+    gyogyszerek = Gyogyszer.query.filter(Gyogyszer.id == gyogyszer_id).first()
+    if gyogyszerek == None or gyogyszerek == {}:
+        return abort(404)
+    else:
+        db.session.add(Felir(datum=datetime.now(), gyogyszer_id=gyogyszer_id, TAJ=taj, vkod=vkod))
+        db.session.commit()
+        return redirect(f'/beteg/{taj}')
+        
+   
 
 @app.route('/dev/vizsgalat_feltolt', methods=['get', 'post'])
 def devVizsgalat_feltolt():

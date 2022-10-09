@@ -57,6 +57,46 @@
             document.getElementById(_id).submit()
         }
 
+        function submitDiagnosztizacio(_form){
+            betegseg = _form.children[0]
+            let formData = new FormData();
+            formData.set('taj', String(betegseg.dataset.taj))
+            formData.set('betegseg_id', String(betegseg.value))
+            formData.set('vkod', String(betegseg.dataset.vkod))
+
+            fetch("/dev/submitDiagnosztizal", 
+            {method: 'post', body: formData, redirect: "follow"})
+            .then((r)=>{
+                if (!r.ok){
+                    alert('Nincs ilyen betegség az adatbázisban!')
+                } 
+                if (r.redirected){
+                    window.location.reload()
+                }
+            })
+            .then((d)=>d)
+        }
+
+        function submitFeliras(_form){
+            gyogyszer = _form.children[0]
+            let formData = new FormData();
+            formData.set('taj', String(gyogyszer.dataset.taj))
+            formData.set('gyogyszer_id', String(gyogyszer.value))
+            formData.set('vkod', String(gyogyszer.dataset.vkod))
+
+            fetch("/dev/submitFelir", 
+            {method: 'post', body: formData, redirect: "follow"})
+            .then((r)=>{
+                if (!r.ok){
+                    alert('Nincs ilyen gyógyszer az adatbázisban!')
+                } 
+                if (r.redirected){
+                    window.location.reload()
+                }
+            })
+            .then((d)=>d)
+        }
+
     </script>
 
     <div class="betegContainer">
@@ -74,29 +114,27 @@
         
             <p>Diagnosztizációk</p>
             {%set diagnosztizaciok = Diagnosztizal.query.filter(Diagnosztizal.vkod == vizsgalat.vkod).all()%}
-            <ul>
+            <ul id="diagnosztizalList">
                 {%for diagnosztizal in diagnosztizaciok%}
-                <li>{{diagnosztizal.betegseg_neve}}</li>
+                <li>{{Betegseg.query.filter(Betegseg.id == diagnosztizal.betegseg_id).first().betegseg_neve}}</li>
                 {%endfor%}
-                <form class="list-form" action="javascript:void(0)" onsubmit="">
-                    <input type="text" list="betegsegLista" id="diagnosztizalForm" name="diagnosztizalForm"><input type="submit" value="Hozzáad"> 
-                </form>
             </ul>
+            <form id="diagnosztizalForm" class="list-form" action="javascript:void(0)" onsubmit="submitDiagnosztizacio(this)">
+                <input type="text" data-taj="{{beteg.TAJ}}" data-vkod="{{vizsgalat.vkod}}" list="betegsegLista" id="diagnosztizalFormInput" name="diagnosztizalFormInput"><input type="submit" value="Hozzáad"> 
+            </form>
             <p>Felirások</p>
             {%set felirasok = Felir.query.filter(Felir.vkod == vizsgalat.vkod).all()%}
-            <ul>
+            <ul id="felirList">
                 {%for felir in felirasok%}
-                <li>{{felir.gyogyszer_neve}}</li>
+                <li>{{Gyogyszer.query.filter(Gyogyszer.id == felir.gyogyszer_id).first().gyogyszer_neve}}</li>
                 {%endfor%}
-                <form class="list-form" action="javascript:void('a')">
-                    <input type="text" name="felirForm" list="gyogyszerLista" id="felirForm" name="felirForm"><input type="submit" value="Hozzáad"> 
-                </form>
             </ul>
+            <form id="felirForm" class="list-form" action="javascript:void(0)" onsubmit="submitFeliras(this)">
+                <input type="text" data-taj="{{beteg.TAJ}}" data-vkod="{{vizsgalat.vkod}}" name="felirForm" list="gyogyszerLista" id="felirFormInput" name="felirFormInput" ><input type="submit" value="Hozzáad"> 
+            </form>
         </details>
         {%endfor%}
     </div>
-
-    {{betegsegek}}
 
     <datalist id="betegsegLista">
         {%for betegseg in betegsegek%}
