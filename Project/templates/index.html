@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
+    <script src="../static/common.js"></script>
     <title>Háziorvos</title>
 </head>
 <body>
@@ -14,7 +15,7 @@
     {%for beteg in betegek%}
     <div class="betegCard">
         <div class="flexrow">
-            <img src="../static/pfp.jpg" alt="pfp">
+            <img class="pfp" src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
             <div class="flexcol">
                 <h1><a href="/beteg/{{beteg.TAJ}}">{{beteg.nev}}</a></h1>
                 <h2>{{beteg.TAJ}}</h2>

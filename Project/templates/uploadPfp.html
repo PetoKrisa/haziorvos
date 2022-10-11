@@ -7,9 +7,11 @@
     <title>UploadPfp</title>
 </head>
 <body>
+    {%if beteg.TAJ != 420420%}
     <form action="/beteg/{{beteg.TAJ}}/pfp/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="pfp" id="pfp">
         <input type="submit" value="Feltölt">
     </form>
+    {%endif%}
 </body>
 </html>

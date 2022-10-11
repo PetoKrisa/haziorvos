@@ -63,11 +63,10 @@ summary p, summary h2{
 ul{
     margin: 0px;
 }
-.betegCard img{
-    max-width: 200px;
-    max-height: 200px;
-    width: 30%;
-    height: 30%;
+.pfp{
+    width: 12vw;
+    height: 12vw;
+    object-fit: cover;
 }
 
 .betegCard a{
@@ -151,6 +150,11 @@ dialog label, dialog input, dialog button{
 @media (max-width: 800px){
     .betegCard, details{
         width: 100vw;
+    }
+    .pfp{
+        width: 25vw;
+        height: 25vw;
+        object-fit: cover;
     }
 
     #navbar{

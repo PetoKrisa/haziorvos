@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
+    <script src="../static/common.js"></script>
     <title>{{beteg.nev}}</title>
 </head>
 <body>
@@ -13,7 +14,15 @@
     <div class="betegCard">
         <a href="/beteg/{{beteg.TAJ}}/pfp/upload">Profilkép változatása</a>
         <div class="flexrow">
-            <img src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
+
+            {%if beteg.TAJ == 420420%}
+            <div>
+                <img class="pfp" src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
+                <p style="color: white;">&#169;2022 PetoKrisa.hu&#8482;</p>
+            </div>
+            {%else%}
+            <img class="pfp" src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
+            {%endif%}
 
 
             <div class="flexcol">
@@ -48,22 +57,6 @@
     </dialog>
 
     <script>
-        function placeholder(_e){
-            _e.src = "/static/pfp.jpg"
-        }
-
-        function openDialog(_id){
-            document.getElementById(_id).showModal()
-        }
-
-        function closeDialog(_child){
-            _child.parentElement.close()
-        }
-
-        function submitForm_(_id){
-            document.getElementById(_id).submit()
-        }
-
         function submitDiagnosztizacio(_form){
             betegseg = _form.children[0]
             let formData = new FormData();
