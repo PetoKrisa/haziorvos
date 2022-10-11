@@ -12,7 +12,7 @@
 
     <div class="betegCard">
         <div class="flexrow">
-            <img src="../static/pfp.jpg" alt="pfp">
+            <img src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
             <div class="flexcol">
                 <h1>{{beteg.nev}}</h1>
                 <h2>{{beteg.TAJ}}</h2>
@@ -45,6 +45,10 @@
     </dialog>
 
     <script>
+        function placeholder(_e){
+            _e.src = "/static/pfp.jpg"
+        }
+
         function openDialog(_id){
             document.getElementById(_id).showModal()
         }

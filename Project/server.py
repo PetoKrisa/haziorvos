@@ -39,6 +39,7 @@ class Beteg(db.Model):
     felirasok = db.relationship("Felir", backref="beteg")
     diagnosztizalasok = db.relationship("Diagnosztizal", backref="beteg")
     
+    pfp = db.Column(db.LargeBinary)
     def __repr__(self):
         return f'{self.TAJ}; {self.nev}'
 
@@ -134,7 +135,8 @@ admin.add_view(ModelView(Diagnosztizal, db.session))
 #ip functions
 @app.before_request
 def showIp():
-    print(request.headers.get('X-FORWARDED-FOR'))
+    #print(request.headers.get('X-FORWARDED-FOR'))
+    print(request.headers.get('X-REAL-IP'))
 
 @app.before_request
 def fixAdmin():
@@ -161,6 +163,21 @@ def beteg(taj):
     gyogyszerek = Gyogyszer.query.all()
     
     return render_template('beteg.html',dtNow=dtNow, Betegseg=Betegseg, Gyogyszer=Gyogyszer, beteg=beteg,gyogyszerek=gyogyszerek, betegsegek=betegsegek, vizsgalatokq=vizsgalatokq, Diagnosztizal=Diagnosztizal, Felir=Felir)
+
+@app.route('/beteg/<taj>/pfp')
+def betegPfp(taj):
+    return send_file(BytesIO(Beteg.query.filter(Beteg.TAJ == taj).first().pfp),mimetype='image/jpg', download_name="pfp", as_attachment=False)
+
+@app.route('/beteg/<taj>/pfp/upload', methods=['POST', 'GET'])
+def betegPfpUpload(taj):
+    beteg = Beteg.query.filter(Beteg.TAJ == taj).first()
+    if request.method == "GET":
+
+        return render_template('uploadPfp.html', beteg=beteg )
+    else:
+        beteg.pfp = request.files['pfp'].read()
+        db.session.commit()
+        return redirect(f'/beteg/{taj}')
 
 @app.route('/dev/submitDiagnosztizal', methods=['get', 'post'])
 def devSubmitDiagnosztizal():
@@ -203,4 +220,4 @@ def handle_context():
     return dict(session=session, db=db, datetime=datetime, reversed=reversed)
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=6969, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
