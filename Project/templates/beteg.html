@@ -11,8 +11,11 @@
     {%include 'navbar.html'%}
 
     <div class="betegCard">
+        <a href="/beteg/{{beteg.TAJ}}/pfp/upload">Profilkép változatása</a>
         <div class="flexrow">
             <img src="/beteg/{{beteg.TAJ}}/pfp" onerror="placeholder(this)" alt="pfp">
+
+
             <div class="flexcol">
                 <h1>{{beteg.nev}}</h1>
                 <h2>{{beteg.TAJ}}</h2>
