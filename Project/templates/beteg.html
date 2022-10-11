@@ -23,7 +23,7 @@
                 <p>Gyógyszer Érzékenység</p>
                 <ul>
                     {%for erzekenyseg in beteg.erzekenysegek%}
-                    <li><p>{{erzekenyseg.gyogyszer_neve}}</p></li>
+                    <li><p>{{Gyogyszer.query.filter(Gyogyszer.id == erzekenyseg.gyogyszer_id).first().gyogyszer_neve}}</p></li>
                     {%endfor%}
                 </ul>
             </div>
